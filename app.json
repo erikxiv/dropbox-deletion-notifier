@@ -1,0 +1,19 @@
+{
+  "name": "dropbox-deletion-notifier",
+  "scripts": {
+  },
+  "env": {
+    "DROPBOX_ACCESS_TOKEN": {
+      "required": true
+    },
+    "DROPBOX_FOLDER": {
+      "required": true
+    },
+    "PORT": {
+      "required": false
+    }
+  },
+  "addons": [
+
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "dropbox-deletion-notifier",
+  "version": "1.0.0",
+  "description": "Sends e-mails whenever files are deleted from Dropbox",
+  "main": "app.js",
+  "engines": {
+    "node": "~v4.2.1",
+    "npm": "~2.14.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erikxiv/dropbox-deletion-notifier.git"
+  },
+  "keywords": [
+    "dropbox"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "dropbox": "^2.1.0",
+    "express": "^4.13.3",
+    "hbs": "^4.0.0",
+    "lodash": "^3.10.1",
+    "node-env-file": "^0.1.8",
+    "q": "^1.4.1",
+    "redis": "^2.5.3",
+    "redis-fast-driver": "^1.0.3",
+    "request": "~2.48.0",
+    "serve-favicon": "^2.3.0",
+    "winston": "^2.1.0"
+  },
+  "homepage": "https://dropbox-deletion-notifier.herokuapp.com",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-nodemon": "^2.0.6"
+  }
+}
