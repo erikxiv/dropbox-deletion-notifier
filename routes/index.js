@@ -24,6 +24,7 @@ module.exports = {
   index: function(req, res, next) {
     // Respond to Dropbox webhook challenge
     if (req.query.challenge) {
+      console.log('Challenged by dropbox: ' + req.query.challenge);
       res.send(req.query.challenge);
     }
     else {
@@ -68,6 +69,7 @@ module.exports = {
                     path: '/v3/mail/send',
                     body: mail.toJSON()
                   });
+                  console.log(mail.toJSON());
                   sg.API(request, function(error, response) {
                     console.log(response.statusCode)
                     console.log(response.body)
@@ -86,6 +88,7 @@ module.exports = {
               });
             }
             else {
+              console.log('No changes');
               res.render('default', {
                 message: 'No changes'
               });
@@ -102,6 +105,7 @@ module.exports = {
           .then(function(response) {
             // Store cursor in REDIS
             client.set(cursor_key, response.cursor, redis.print);
+            console.log('Created cursor');
             res.render('default', {
               message: 'Created cursor'
             });
