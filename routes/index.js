@@ -47,7 +47,7 @@ module.exports = {
               dbx.usersGetCurrentAccount()
               .then(function(emailResponse) {
                 var context = {
-                  message: 'Dropbox: ' + deleted[0].name + ' and ' + deleted.length + ' other files where deleted from ' + process.env.DROPBOX_FOLDER,
+                  message: 'Dropbox: ' + deleted[0].name + ' and ' + (deleted.length-1) + ' other files where deleted from ' + process.env.DROPBOX_FOLDER,
                   // message: 'Dropbox: ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER + ' ' + new Date().toISOString(),
                   email: emailResponse.email,
                   deleted_count: deleted.length,
@@ -56,7 +56,7 @@ module.exports = {
                 res.render('default', context);
                 // Send e-mail
                 _app.render('default', context, function(err, html) {
-                  var from_email = new sg_helper.Email('noreply@dropbox-deletion-notifier.herokuapp.com');
+                  var from_email = new sg_helper.Email(process.env.SENDER_EMAIL);
                   var to_email = new sg_helper.Email(emailResponse.email);
                   var subject = context.message;
                   var content = new sg_helper.Content('text/html', html);
