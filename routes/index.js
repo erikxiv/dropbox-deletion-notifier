@@ -46,21 +46,21 @@ module.exports = {
               dbx.usersGetCurrentAccount()
               .then(function(emailResponse) {
                 res.render('default', {
-                  message: 'Dropbox - ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER,
+                  message: 'Dropbox: ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER,
                   email: emailResponse.email,
                   deleted_count: deleted.length,
                   deleted: deleted
                 });
                 // Send e-mail
                 _app.render('default', {
-                  message: 'Dropbox - ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER,
+                  message: 'Dropbox: ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER,
                   email: emailResponse.email,
                   deleted_count: deleted.length,
                   deleted: deleted
                 }, function(err, html) {
                   var from_email = new sg_helper.Email('noreply@dropbox-deletion-notifier.herokuapp.com');
                   var to_email = new sg_helper.Email(emailResponse.email);
-                  var subject = 'Dropbox - ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER;
+                  var subject = 'Dropbox: ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER + ' ' + new Date().toISOString();
                   var content = new sg_helper.Content('text/html', html);
                   var mail = new sg_helper.Mail(from_email, subject, to_email, content);
                   var request = sg.emptyRequest({
