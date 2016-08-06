@@ -1,4 +1,11 @@
-<script>
-var data = {{{dataAsJson}}};
-</script>
-{{content}}
+<h3>{{message}}</h3>
+
+For details and to restore deleted files, see <a href="https://www.dropbox.com/events">https://www.dropbox.com/events</a>.
+
+{{#if deleted}}
+<ul>
+{{#each deleted}}
+  <li>{{path_lower}}</li>
+{{/each}}
+</ul>
+{{/if}}

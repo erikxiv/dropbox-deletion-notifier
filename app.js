@@ -5,10 +5,10 @@ var path = require("path");
 var express = require("express");
 var bodyParser = require("body-parser");
 var env = require("node-env-file");
-
-var routes = require("./routes/index");
+var routes = require("./routes/index").index;
 
 var app = express();
+require("./routes/index").setApp(app);
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
