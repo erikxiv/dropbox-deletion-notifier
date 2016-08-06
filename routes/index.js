@@ -46,22 +46,18 @@ module.exports = {
               // Retrieve e-mail of dropbox user
               dbx.usersGetCurrentAccount()
               .then(function(emailResponse) {
-                res.render('default', {
-                  message: 'Dropbox: ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER,
+                var context = {
+                  message: 'Dropbox: ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER + ' ' + new Date().toISOString(),
                   email: emailResponse.email,
                   deleted_count: deleted.length,
                   deleted: deleted
-                });
+                };
+                res.render('default', context);
                 // Send e-mail
-                _app.render('default', {
-                  message: 'Dropbox: ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER,
-                  email: emailResponse.email,
-                  deleted_count: deleted.length,
-                  deleted: deleted
-                }, function(err, html) {
+                _app.render('default', context, function(err, html) {
                   var from_email = new sg_helper.Email('noreply@dropbox-deletion-notifier.herokuapp.com');
                   var to_email = new sg_helper.Email(emailResponse.email);
-                  var subject = 'Dropbox: ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER + ' ' + new Date().toISOString();
+                  var subject = context.message;
                   var content = new sg_helper.Content('text/html', html);
                   var mail = new sg_helper.Mail(from_email, subject, to_email, content);
                   var request = sg.emptyRequest({
@@ -69,7 +65,7 @@ module.exports = {
                     path: '/v3/mail/send',
                     body: mail.toJSON()
                   });
-                  console.log(mail.toJSON());
+                  console.log(subject);
                   sg.API(request, function(error, response) {
                     console.log(response.statusCode)
                     console.log(response.body)
