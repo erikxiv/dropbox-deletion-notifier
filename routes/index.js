@@ -1,12 +1,11 @@
 'use strict';
 
 var _ = require('lodash');
-var fs = require('fs');
 var hbs = require('hbs');
-var path = require('path');
 var redis = require('redis');
 var Dropbox = require('dropbox');
 var sg_helper = require('sendgrid').mail
+var request = require('request');
 
 var client = redis.createClient(process.env.REDIS_URL);
 var dbx = new Dropbox({ accessToken: process.env.DROPBOX_ACCESS_TOKEN });
@@ -56,22 +55,47 @@ module.exports = {
                 res.render('default', context);
                 // Send e-mail
                 _app.render('default', context, function(err, html) {
-                  var from_email = new sg_helper.Email(process.env.SENDER_EMAIL);
-                  var to_email = new sg_helper.Email(emailResponse.email);
-                  var subject = context.message;
-                  var content = new sg_helper.Content('text/html', html);
-                  var mail = new sg_helper.Mail(from_email, subject, to_email, content);
-                  var request = sg.emptyRequest({
-                    method: 'POST',
-                    path: '/v3/mail/send',
-                    body: mail.toJSON()
-                  });
-                  console.log(subject);
-                  sg.API(request, function(error, response) {
-                    console.log(response.statusCode)
-                    console.log(response.body)
-                    console.log(response.headers)
-                  });
+                  console.log('Sending e-mail to ' + emailResponse.email + ': ' + context.message);
+                  request.post(
+                      'https://api.mailgun.net/v2/' + process.env.MAILGUN_DOMAIN + '/messages',
+                      {
+                        auth: {
+                          user: 'api',
+                          pass: process.env.MAILGUN_API_KEY
+                        },
+                        qs: {
+                          from: process.env.SENDER_EMAIL,
+                          to: emailResponse.email,
+                          subject: context.message,
+                          text: context.message,
+                          html: html
+                        }
+                      },
+                      function (error, response, body) {
+                          if (error || response.statusCode != 200) {
+                            console.error('Failed to send e-mail', error, response.statusCode);
+                          }
+                          else {
+                              console.log('Successfully sent e-mail', body);
+                          }
+                      }
+                  );
+                  // var from_email = new sg_helper.Email(process.env.SENDER_EMAIL);
+                  // var to_email = new sg_helper.Email(emailResponse.email);
+                  // var subject = context.message;
+                  // var content = new sg_helper.Content('text/html', html);
+                  // var mail = new sg_helper.Mail(from_email, subject, to_email, content);
+                  // var request = sg.emptyRequest({
+                  //   method: 'POST',
+                  //   path: '/v3/mail/send',
+                  //   body: mail.toJSON()
+                  // });
+                  // console.log(subject);
+                  // sg.API(request, function(error, response) {
+                  //   console.log(response.statusCode)
+                  //   console.log(response.body)
+                  //   console.log(response.headers)
+                  // });
                 });
                 // Store new cursor in REDIS
                 client.set(cursor_key, response.cursor, redis.print);
