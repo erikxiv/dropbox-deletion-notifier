@@ -74,7 +74,7 @@ module.exports = {
                           user: 'api',
                           pass: process.env.MAILGUN_API_KEY
                         },
-                        qs: {
+                        form: {
                           from: process.env.SENDER_EMAIL,
                           to: receiver,
                           subject: context.message,
