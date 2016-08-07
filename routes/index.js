@@ -45,17 +45,18 @@ module.exports = {
               // Retrieve e-mail of dropbox user
               dbx.usersGetCurrentAccount()
               .then(function(emailResponse) {
+                var receiver = process.env.RECEIVER_EMAIL ? process.env.RECEIVER_EMAIL : emailResponse.email;
                 var context = {
                   message: 'Dropbox: ' + deleted[0].name + ' and ' + (deleted.length-1) + ' other files where deleted from ' + process.env.DROPBOX_FOLDER,
                   // message: 'Dropbox: ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER + ' ' + new Date().toISOString(),
-                  email: emailResponse.email,
+                  email: receiver,
                   deleted_count: deleted.length,
                   deleted: deleted
                 };
                 res.render('default', context);
                 // Send e-mail
                 _app.render('default', context, function(err, html) {
-                  console.log('Sending e-mail to ' + emailResponse.email + ': ' + context.message);
+                  console.log('Sending e-mail to ' + receiver + ': ' + context.message);
                   request.post(
                       'https://api.mailgun.net/v3/' + process.env.MAILGUN_DOMAIN + '/messages',
                       {
@@ -65,7 +66,7 @@ module.exports = {
                         },
                         qs: {
                           from: process.env.SENDER_EMAIL,
-                          to: process.env.RECEIVER_EMAIL ? process.env.RECEIVER_EMAIL : emailResponse.email,
+                          to: receiver,
                           subject: context.message,
                           text: context.message,
                           html: html
@@ -81,7 +82,7 @@ module.exports = {
                       }
                   );
                   // var from_email = new sg_helper.Email(process.env.SENDER_EMAIL);
-                  // var to_email = new sg_helper.Email(emailResponse.email);
+                  // var to_email = new sg_helper.Email(receiver);
                   // var subject = context.message;
                   // var content = new sg_helper.Content('text/html', html);
                   // var mail = new sg_helper.Mail(from_email, subject, to_email, content);
