@@ -127,6 +127,9 @@ module.exports = {
               res.render('default', {
                 message: 'No changes'
               });
+              // Store new cursor in REDIS
+              client.set(cursor_key, response.cursor, redis.print);
+              console.log('New cursor', response.cursor);
             }
           })
         }
