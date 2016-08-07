@@ -46,8 +46,18 @@ module.exports = {
               dbx.usersGetCurrentAccount()
               .then(function(emailResponse) {
                 var receiver = process.env.RECEIVER_EMAIL ? process.env.RECEIVER_EMAIL : emailResponse.email;
+                var message = 'Dropbox: ' + deleted[0].name;
+                if (deleted.length > 1) {
+                  message += ' and ' + (deleted.length-1) + ' other files were deleted';
+                }
+                else {
+                  message += 'was deleted';
+                }
+                if (process.env.DROPBOX_FOLDER) {
+                  message +=  ' from ' + process.env.DROPBOX_FOLDER;
+                }
                 var context = {
-                  message: 'Dropbox: ' + deleted[0].name + ' and ' + (deleted.length-1) + ' other files where deleted from ' + process.env.DROPBOX_FOLDER,
+                  message: message,
                   // message: 'Dropbox: ' + deleted.length + ' files deleted from ' + process.env.DROPBOX_FOLDER + ' ' + new Date().toISOString(),
                   email: receiver,
                   deleted_count: deleted.length,
