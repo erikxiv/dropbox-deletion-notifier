@@ -38,7 +38,7 @@ module.exports = {
             // TODO: get all entries if response.has_more == true
             // response.entries = [{".tag":"deleted","name":"2014 - airdrop economy.xls","path_display":"/k&e/2014 - airdrop economy.xls","path_lower":"/k&e/2014 - airdrop economy.xls"},{".tag":"deleted","name":"2013 - iphone5.xlsx","path_display":"/k&e/2013 - iphone5.xlsx","path_lower":"/k&e/2013 - iphone5.xlsx"},{".tag":"file","client_modified":"2016-06-18T09:38:53Z","id":"id:aF8ShzpyFi0AAAAAAAAAag","name":"Voucher hyrbil sommar 2016 copy.pdf","parent_shared_folder_id":"89220786","path_display":"/K&E/Voucher hyrbil sommar 2016 copy.pdf","path_lower":"/k&e/voucher hyrbil sommar 2016 copy.pdf","rev":"3b1055166b2","server_modified":"2016-08-06T19:21:41Z","sharing_info":{"modified_by":"dbid:AACcjKKc3tEzjjTrgwXsBMHdTGgvZE8paBk","parent_shared_folder_id":"89220786","read_only":false},"size":378800},{".tag":"file","client_modified":"2013-02-11T16:01:27Z","id":"id:aF8ShzpyFi0AAAAAAAAAEA","name":"2013 - iPhone5x.xlsx","parent_shared_folder_id":"89220786","path_display":"/K&E/2013 - iPhone5x.xlsx","path_lower":"/k&e/2013 - iphone5x.xlsx","rev":"3b4055166b2","server_modified":"2016-08-06T19:22:13Z","sharing_info":{"modified_by":"dbid:AACcjKKc3tEzjjTrgwXsBMHdTGgvZE8paBk","parent_shared_folder_id":"89220786","read_only":false},"size":44402},{".tag":"file","client_modified":"2016-08-06T19:22:30Z","id":"id:aF8ShzpyFi0AAAAAAAAADw","name":"2012 - Digitalkameror.xlsx","parent_shared_folder_id":"89220786","path_display":"/K&E/2012 - Digitalkameror.xlsx","path_lower":"/k&e/2012 - digitalkameror.xlsx","rev":"3b5055166b2","server_modified":"2016-08-06T19:22:35Z","sharing_info":{"modified_by":"dbid:AACcjKKc3tEzjjTrgwXsBMHdTGgvZE8paBk","parent_shared_folder_id":"89220786","read_only":false},"size":30148}];
             console.log('Dropbox change count + has_more', _.countBy(response.entries, '.tag'), response.has_more);
-            var deleted = _.reject(response.entries, function(e) {
+            var deleted = _.filter(response.entries, function(e) {
               return e['.tag'] === 'deleted';
             }).sort(function(a,b) {
               return a.path_lower.localeCompare(b.path_lower);
@@ -53,7 +53,7 @@ module.exports = {
                   message += ' and ' + (deleted.length-1) + ' other files were deleted';
                 }
                 else {
-                  message += 'was deleted';
+                  message += ' was deleted';
                 }
                 if (process.env.DROPBOX_FOLDER) {
                   message +=  ' from ' + process.env.DROPBOX_FOLDER;
