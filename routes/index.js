@@ -57,7 +57,7 @@ module.exports = {
                 _app.render('default', context, function(err, html) {
                   console.log('Sending e-mail to ' + emailResponse.email + ': ' + context.message);
                   request.post(
-                      'https://api.mailgun.net/v2/' + process.env.MAILGUN_DOMAIN + '/messages',
+                      'https://api.mailgun.net/v3/' + process.env.MAILGUN_DOMAIN + '/messages',
                       {
                         auth: {
                           user: 'api',
@@ -65,7 +65,7 @@ module.exports = {
                         },
                         qs: {
                           from: process.env.SENDER_EMAIL,
-                          to: emailResponse.email,
+                          to: process.env.RECEIVER_EMAIL ? process.env.RECEIVER_EMAIL : emailResponse.email,
                           subject: context.message,
                           text: context.message,
                           html: html
