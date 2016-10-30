@@ -4,12 +4,10 @@ var _ = require('lodash');
 var hbs = require('hbs');
 var redis = require('redis');
 var Dropbox = require('dropbox');
-var sg_helper = require('sendgrid').mail
 var request = require('request');
 
 var client = redis.createClient(process.env.REDIS_URL);
 var dbx = new Dropbox({ accessToken: process.env.DROPBOX_ACCESS_TOKEN });
-var sg = require('sendgrid')(process.env.SENDGRID_API_KEY);
 
 client.on('error', function (err) {
   console.error('Error ' + err);
@@ -93,22 +91,6 @@ module.exports = {
                           }
                       }
                   );
-                  // var from_email = new sg_helper.Email(process.env.SENDER_EMAIL);
-                  // var to_email = new sg_helper.Email(receiver);
-                  // var subject = context.message;
-                  // var content = new sg_helper.Content('text/html', html);
-                  // var mail = new sg_helper.Mail(from_email, subject, to_email, content);
-                  // var request = sg.emptyRequest({
-                  //   method: 'POST',
-                  //   path: '/v3/mail/send',
-                  //   body: mail.toJSON()
-                  // });
-                  // console.log(subject);
-                  // sg.API(request, function(error, response) {
-                  //   console.log(response.statusCode)
-                  //   console.log(response.body)
-                  //   console.log(response.headers)
-                  // });
                 });
                 // Store new cursor in REDIS
                 client.set(cursor_key, response.cursor, redis.print);
