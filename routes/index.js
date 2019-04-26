@@ -8,6 +8,7 @@ var request = require('request');
 
 var client = redis.createClient(process.env.REDIS_URL);
 var dbx = new Dropbox({ accessToken: process.env.DROPBOX_ACCESS_TOKEN });
+var ignoreFolders = process.env.DROPBOX_IGNORE_FOLDERS ? process.env.DROPBOX_IGNORE_FOLDERS.toLowerCase().split(',') : [];
 
 client.on('error', function (err) {
   console.error('Error ' + err);
@@ -38,6 +39,8 @@ module.exports = {
             console.log('Dropbox change count + has_more', _.countBy(response.entries, '.tag'), response.has_more);
             var deleted = _.filter(response.entries, function(e) {
               return e['.tag'] === 'deleted';
+            }).filter(function(e) {
+              return ignoreFolders.indexOf(e.path_lower) >= 0;
             }).sort(function(a,b) {
               return a.path_lower.localeCompare(b.path_lower);
             });
