@@ -40,7 +40,7 @@ module.exports = {
             var deleted = _.filter(response.entries, function(e) {
               return e['.tag'] === 'deleted';
             }).filter(function(e) {
-              return _some(ignoreFolders, function(x) {
+              return _.some(ignoreFolders, function(x) {
                 e.path_lower.indexOf(x) >= 0;
               });
             }).sort(function(a,b) {
